@@ -23,7 +23,7 @@ Edição e exclusão de produtos diretamente na listagem.
 **JavaScript** - Manipulação do DOM e armazenamento dos dados no localStorage.
 
 
-🚀 Como Executar o Projeto
+**Como Executar o Projeto**
 
 Clone o repositório:
 
