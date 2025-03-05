@@ -2,7 +2,7 @@
 
 Este projeto consiste em um sistema simples de cadastro e listagem de produtos utilizando HTML, CSS e JavaScript, armazenando os dados no localStorage do navegador.
 
-<img src="img_desafio/tela-projeto.gif">
+<img src="images/tela-projeto.gif">
 
 **Funcionalidades**
 
