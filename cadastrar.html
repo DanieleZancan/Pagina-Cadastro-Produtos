@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos</title>
+    <link rel="stylesheet" href="CSS/styless.css">
+</head>
+<body>
+
+    <header class="topo-site">
+        <nav>
+            <ul class="menu">
+                <li><a href="cadastrar.html">Cadastrar Produto</a></li>
+                <li><a href="listar.html">Listar Produtos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container" id="cadastrar">
+        <h2 class="titulo-form">Formulário de Cadastro de Produtos:</h2>
+        <form method="POST" action="#" id="produtoForm">
+            <fieldset>
+                <legend>Cadastre um novo produto:</legend>
+
+                <label for="prodNome">Nome do Produto:</label>
+                <input type="text" id="prodNome" placeholder="Nome detalhado do produto..." required>
+
+                <label for="prodDesc">Descrição do Produto:</label>
+                <input type="text" id="prodDesc" placeholder="Descrição breve do produto..." required>
+
+                <label for="prodValor">Valor do Produto:</label>
+                <input type="number" id="prodValor" placeholder="Escreva no modelo, ex: 0.00" required step="0.01">
+
+                <label for="prodAvalia">Disponível para Venda:</label>
+
+                <select name="prodAvalia" id="prodAvalia" required>
+                    <option value="sim">Sim</option>
+                    <option value="nao">Não</option>
+                </select>
+
+                <button type="submit">Cadastrar Produto</button>
+
+            </fieldset>
+
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("produtoForm").addEventListener("submit", function(event) {
+            const nome = document.getElementById("prodNome").value;
+            const descricao = document.getElementById("prodDesc").value;
+            const valor = document.getElementById("prodValor").value;
+            
+            if (!nome || !descricao || valor <= 0) {
+                alert("Por favor, preencha todos os campos corretamente.");
+                event.preventDefault();
+            }
+        });
+    </script>   
+    
+    <script>
+        const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+        
+        document.getElementById("produtoForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const nome = document.getElementById("prodNome").value;
+            const descricao = document.getElementById("prodDesc").value;
+            const valor = document.getElementById("prodValor").value;
+            const avaliacao = document.getElementById("prodAvalia").value;
+        
+            const novoProduto = {
+                nome,
+                descricao,
+                valor: `R$ ${parseFloat(valor).toFixed(2)}`,
+                avaliacao: avaliacao === "sim" ? "Sim, disponível" : "Não, sem disponibilidade"
+            };
+        
+            produtos.push(novoProduto);
+            localStorage.setItem("produtos", JSON.stringify(produtos));
+            alert("Produto cadastrado com sucesso!");
+        });
+        </script>
+        
+        
+        
+
+</body>
+</html>

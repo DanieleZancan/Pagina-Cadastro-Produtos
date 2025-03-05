@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listagem de Produtos</title>
+    <link rel="stylesheet" href="CSS/styless.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <header class="topo-site">
+        <nav>
+            <ul class="menu">
+                <li><a href="cadastrar.html">Cadastrar Produto</a></li>
+                <li><a href="listar.html">Listar Produto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container" id="listar">
+        <h2 class="titulo-form">Lista de Produtos Cadastrados:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome:</th>
+                    <th>Descrição:</th>
+                    <th>Valor:</th>
+                    <th>Disponibilidade:</th>
+                    <th>Ações:</th>
+                </tr>
+            </thead>
+
+            <tbody id="produtos-list">
+                <!-- Produtos serão listados aqui -->
+            </tbody>
+        </table>        
+        
+        <form id="form-editar" style="display: none;">
+            <br>
+            <h2>Editar Produto</h2>
+            <input type="hidden" id="editIndex">
+            <label>Nome:</label>
+            <input type="text" id="editNome" required>
+            <label>Descrição:</label>
+            <input type="text" id="editDesc" required>
+            <label>Valor:</label>
+            <input type="number" id="editValor" required>
+            <label>Disponibilidade:</label>
+            <select id="editAvalia">
+                <option value="sim">Sim</option>
+                <option value="nao">Não</option>
+            </select>
+            <button type="submit">Salvar Alterações</button>
+            <button type="button" onclick="cancelarEdicao()">Cancelar</button>
+        </form>
+    </div>
+
+    <script>
+        function carregarProdutos() {
+            const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+            const listaProdutos = document.getElementById("produtos-list");
+            listaProdutos.innerHTML = '';
+
+            produtos.forEach((produto, index) => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${produto.nome}</td>
+                    <td>${produto.descricao}</td>
+                    <td>${produto.valor}</td>
+                    <td>${produto.avaliacao}</td>
+                    <td>
+                        <button onclick="editarProduto(${index})" title="Editar"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="excluirProduto(${index})" title="Excluir"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                `;
+
+                listaProdutos.appendChild(row);
+            });
+        }
+
+        function editarProduto(index) {
+            const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+            const produto = produtos[index];
+
+            document.getElementById("editIndex").value = index;
+            document.getElementById("editNome").value = produto.nome;
+            document.getElementById("editDesc").value = produto.descricao;
+            document.getElementById("editValor").value = produto.valor.replace('R$ ', '').replace(',', '.');
+            document.getElementById("editAvalia").value = produto.avaliacao === "Sim, disponível" ? "sim" : "nao";
+
+            document.getElementById("form-editar").style.display = "block";
+        }
+
+        function cancelarEdicao() {
+            document.getElementById("form-editar").style.display = "none";
+        }
+
+        document.getElementById("form-editar").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            const index = document.getElementById("editIndex").value;
+            const nome = document.getElementById("editNome").value;
+            const descricao = document.getElementById("editDesc").value;
+            const valor = document.getElementById("editValor").value;
+            const avaliacao = document.getElementById("editAvalia").value;
+
+            const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+
+            produtos[index] = {
+                nome,
+                descricao,
+                valor: `R$ ${parseFloat(valor).toFixed(2)}`,
+                avaliacao: avaliacao === "sim" ? "Sim, disponível" : "Não, sem disponibilidade"
+            };
+
+            localStorage.setItem("produtos", JSON.stringify(produtos));
+
+            carregarProdutos();
+            document.getElementById("form-editar").reset();
+            document.getElementById("form-editar").style.display = "none";
+        });
+
+        function excluirProduto(index) {
+            const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+            produtos.splice(index, 1);
+
+            localStorage.setItem("produtos", JSON.stringify(produtos));
+
+            carregarProdutos();
+        }
+
+        window.onload = carregarProdutos;
+    </script>
+
+</body>
+</html>
